@@ -1,0 +1,63 @@
+ /*********************************************************
+ * Description:
+ * This module is a parallel to serial converter
+ * 	Inputs:
+ *			clk: 		Clock input signal
+ *			reset: 	Reset input signal
+ *			par:		Input parallel data
+ *			load:    Load command input signal
+ *
+ *		Outputs:
+ *			ser: 		Serial output
+ *
+ *
+ *	Author:  Antonio Rodríguez    md193781   ITESO 
+ *	Date:    08/09/18
+ *
+ **********************************************************/
+
+module par2ser 
+#(
+	parameter WORD_LENGTH = 8										//Input parameter definition
+)
+
+(						
+	input 					   clk,
+	input 					   reset,
+	input  					   load,
+	input [WORD_LENGTH-1:0] par,
+	
+	output 	ser
+	
+	
+);
+
+
+reg [WORD_LENGTH-1:0] buffer;
+reg ser_reg;
+
+//Parallel to serial converter
+always @(posedge clk) 
+begin
+	if(reset)
+	begin
+		buffer <= 0;
+		ser_reg <= 0;
+	end
+	else
+	begin
+		if(load)
+		begin
+			buffer <= par;
+		end
+		else
+		begin
+			ser_reg <= buffer[WORD_LENGTH-1];
+			buffer <= buffer<<1;
+		end
+	end
+end
+
+assign ser = ser_reg;
+
+endmodule

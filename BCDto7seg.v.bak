@@ -1,0 +1,28 @@
+ /*********************************************************
+ * Description:
+ * This module is a BCD top 7 segment converter
+ * 	Inputs:
+ *			BCD: 		BCD input data
+ *
+ *		Outputs:
+ *			SSD:     Seven Segment display output
+ *
+ *	Author:  Antonio Rodríguez    md193781   ITESO 
+ *	Date:    08/09/18
+ *
+ **********************************************************/
+
+module bin2BCD
+(						
+	input clk,
+	input init,
+	input	reset,
+	input	in,						
+	
+	output Cout,
+	output [3:0] BCD
+	
+);
+
+
+endmodule

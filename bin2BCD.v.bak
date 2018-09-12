@@ -1,0 +1,111 @@
+ /*********************************************************
+ * Description:
+ * This module is a binary to BCD converter
+ * 	Inputs:
+ *			bin: 		Binary input data
+ *			clk: 		Clock input signal
+ * 		start:	Start input signal
+ *			reset: 	Reset input signal
+ *		Outputs:
+ *			H: 		Hundreds of the BCD
+ *			T: 		Tens of the BCD
+ *			U: 		Units of the BCD
+ *			ready:	Ready signal
+ *
+ *	Author:  Antonio Rodríguez    md193781   ITESO 
+ *	Date:    08/09/18
+ *
+ **********************************************************/
+
+module bin2BCD
+#(
+	parameter WORD_LENGTH = 8										//Input parameter definition
+)
+
+(
+	input [WORD_LENGTH-1:0] bin,						
+	input 						clk,
+	input 						start,
+	input							reset,
+	
+	output [3:0] H,
+	output [3:0] T,
+	output [3:0] U,
+	output  		 ready
+	
+);
+
+reg  start_reg;
+reg  [WORD_LENGTH-1:0] counter;
+reg  [WORD_LENGTH+11:0] BCD_reg;
+
+// Reset and start detection
+always @(posedge clk) 
+begin
+	if(reset) 
+	begin
+		start_reg <= 0;
+		counter <= 0;
+	end
+	else if (start)
+	begin
+		start_reg <= 1;
+	end
+end
+
+// Counter
+always @(posedge clk) 
+begin
+	if(start_reg) 
+	begin
+		counter <= counter +1;
+	end
+	else
+	begin
+		counter <= 0;
+	end
+end
+
+// Counter checking for stoping BCD convertion
+always @(posedge clk) 
+begin
+	if(counter == WORD_LENGTH) 
+	begin
+		ready <= 1;
+		counter <= 0;
+		start_reg <= 0;
+	end
+	else
+	begin
+		ready <= 0;
+	end
+end
+
+// Pass input to the register to be shifted
+always @(posedge start_reg) 
+begin
+	BCD_reg <= {11'b0,bin};
+end
+
+
+// BCD converter
+always @(posedge clk) 
+begin
+	if(start_reg == 1) 
+	begin
+		if ()
+		begin
+			
+		end
+	end
+	else
+	begin
+		ready <= 0;
+	end
+end
+
+
+
+
+
+endmodule
