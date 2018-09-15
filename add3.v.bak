@@ -1,0 +1,66 @@
+ /*********************************************************
+ * Description:
+ * This module is a binary to BCD converter
+ * 	Inputs:
+ *			bin: 		Binary input data
+ *			clk: 		Clock input signal
+ * 		start:	Start input signal
+ *			reset: 	Reset input signal
+ *		Outputs:
+ *			H: 		Hundreds of the BCD
+ *			T: 		Tens of the BCD
+ *			U: 		Units of the BCD
+ *			ready:	Ready signal
+ *
+ *	Author:  Antonio Rodríguez    md193781   ITESO 
+ *	Date:    08/09/18
+ *
+ **********************************************************/
+
+module add3
+
+(
+	input [3:0] in,						
+	
+	output [3:0] out
+
+);
+
+reg  start_reg;
+reg  ready_reg;
+wire [3:0] U_reg;
+wire [3:0] T_reg;
+wire [3:0] H_reg;
+reg [7:0] counter;
+
+wire [WORD_LENGTH-1:0] bin_wir;			//Wire to connect Two's complement decoder output to parallel to serial decod
+wire  [WORD_LENGTH-1:0] regTObinint;	//Wire to connect Input resgister of Binary input to internal wire
+
+wire  serTOUBCD;						//Wire to connect serial to Units BCD
+wire  UBCDTOTBCD;						//Wire to connect Units BCD to Tens BCD
+wire  TBCDTOHBCD;						//Wire to connect Tens BCD to Hundreds BCD
+wire  dummy;						   //Wire to connect Hundreds BCD to dummy line
+
+wire [3:0] regTOunits7seg;        //Wire to connect register to 7seg decoder for units
+wire [3:0] regTOtens7seg;        //Wire to connect register to 7seg decoder for tens
+wire [3:0] regTOhundreds7seg;        //Wire to connect register to 7seg decoder for hundreds
+
+
+always @(in) 
+begin
+	case (in)
+		4'b0000: SSD_reg = 4'b0000;   // case for 0 -> 0
+		4'b0001: SSD_reg = 4'b0001;   // case for 1 -> 1
+		4'b0010: SSD_reg = 4'b0010;   // case for 2 -> 2
+		4'b0011: SSD_reg = 4'b0011;   // case for 3 -> 3
+		4'b0100: SSD_reg = 4'b0100;   // case for 4 -> 4
+		4'b0101: SSD_reg = 4'b1000;   // case for 5 -> 8
+		4'b0110: SSD_reg = 4'b1001;   // case for 6 -> 9
+		4'b0111: SSD_reg = 4'b1010;   // case for 7 -> 10
+		4'b1000: SSD_reg = 4'b1011;   // case for 8 -> 11
+		4'b1001: SSD_reg = 4'b1100;   // case for 9 -> 12
+		default: SSD_reg = 4'bxxxx;   // case for default -> x ;
+		endcase
+end
+
+endmodule
